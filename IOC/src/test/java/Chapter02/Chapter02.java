@@ -1,5 +1,7 @@
 package Chapter02;
 
+import Chapter02.bean.BarInterfaceImpl;
+import Chapter02.bean.Foo;
 import Chapter02.bean.Student;
 import Chapter02.bean.ThreadScope;
 import org.junit.Before;
@@ -87,4 +89,22 @@ public class Chapter02 {
 								.map(task).collect(Collectors.toSet())
 		).join();
 	}
+
+	@Test
+	public void factory() {
+		BarInterfaceImpl barByClass = beanFactory.getBean("barByClass", BarInterfaceImpl.class);
+		Foo fooByClass = beanFactory.getBean("fooByClass", Foo.class);
+		assertEquals(barByClass, fooByClass.getBarInstance());
+
+		BarInterfaceImpl barWithPara = beanFactory.getBean("barWithPara", BarInterfaceImpl.class);
+		Foo fooWithPara = beanFactory.getBean("fooWithPara", Foo.class);
+		assertEquals("name", barWithPara.getName());
+		assertEquals(barWithPara, fooWithPara.getBarInstance());
+
+		BarInterfaceImpl barByInstance = beanFactory.getBean("barByInstance", BarInterfaceImpl.class);
+		Foo fooByInstance = beanFactory.getBean("fooByInstance", Foo.class);
+		assertEquals(barByInstance, fooByInstance.getBarInstance());
+
+	}
+
 }

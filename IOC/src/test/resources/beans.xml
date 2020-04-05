@@ -45,5 +45,26 @@ http://www.springframework.org/schema/beans/spring-beans.xsd">
 		<property name="age" value="23"/>
 	</bean>
 
+	<!--静态工厂-->
+	<bean id="fooByClass" class="Chapter02.bean.Foo">
+		<property name="barInstance" ref="barByClass"/>
+	</bean>
+	<bean id="barByClass" class="Chapter02.factory.BarInterfaceFactory" factory-method="getInstanceByClass"/>
+
+	<!--静态工厂  有参数-->
+	<bean id="fooWithPara" class="Chapter02.bean.Foo">
+		<property name="barInstance" ref="barWithPara"/>
+	</bean>
+	<bean id="barWithPara" class="Chapter02.factory.BarInterfaceFactory" factory-method="getInstanceWithPara">
+		<constructor-arg type="java.lang.String" value="name"/>
+	</bean>
+
+	<!--实例工厂-->
+	<bean id="fooByInstance" class="Chapter02.bean.Foo">
+		<property name="barInstance" ref="barByInstance"/>
+	</bean>
+	<bean id="barFactory" class="Chapter02.factory.BarInterfaceFactory"/>
+	<bean id="barByInstance" factory-bean="barFactory" factory-method="getInstanceByInstance"/>
+
 
 </beans>
