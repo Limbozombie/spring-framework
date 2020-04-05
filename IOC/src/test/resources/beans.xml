@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="
+http://www.springframework.org/schema/beans 
+http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+	<bean id="first" class="java.lang.String">
+		<constructor-arg value="首先"/>
+	</bean>
+
+
+	<bean id="threadScopeBean" class="Chapter02.bean.Student" scope="thread">
+		<property name="name" value="名字"/>
+		<property name="age" value="20"/>
+	</bean>
+
+	<!--scope 默认为 singleton-->
+	<bean id="singleton" class="Chapter02.bean.Student">
+		<constructor-arg value="小明"/>
+		<constructor-arg type="java.lang.Byte" value="23"/>
+	</bean>
+
+
+	<bean id="small2" class="Chapter02.bean.Student">
+		<constructor-arg ref="first"/>
+		<constructor-arg type="java.lang.Byte" value="23"/>
+	</bean>
+
+
+	<!--Student	必须提供无参构造器-->
+	<bean id="small3" class="Chapter02.bean.Student">
+		<property name="name" ref="first"/>
+		<property name="age" value="23"/>
+	</bean>
+
+
+	<!-- depends-on
+		要求容器在初始化 small4 之前首先实例化 first
+		大部分情况下，是那些拥有静态代码块初始化代码或者数据库驱动注册之类的场景
+		如有多个，逗号分割 -->
+	<bean id="small4" class="Chapter02.bean.Student" depends-on="first">
+		<property name="name" ref="first"/>
+		<property name="age" value="23"/>
+	</bean>
+
+
+</beans>
