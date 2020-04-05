@@ -67,4 +67,9 @@ http://www.springframework.org/schema/beans/spring-beans.xsd">
 	<bean id="barByInstance" factory-bean="barFactory" factory-method="getInstanceByInstance"/>
 
 
+	<!--	FactoryBean -->
+	<bean id="nextDayDateProvider" class="Chapter02.bean.NextDayDateProvider">
+		<property name="dateOfNextDay" ref="nextDayDate"/>
+	</bean>
+	<bean id="nextDayDate" class="Chapter02.bean.NextDayDateFactoryBean"/>
 </beans>

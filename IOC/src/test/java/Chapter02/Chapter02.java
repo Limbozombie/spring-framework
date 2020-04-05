@@ -1,15 +1,13 @@
 package Chapter02;
 
-import Chapter02.bean.BarInterfaceImpl;
-import Chapter02.bean.Foo;
-import Chapter02.bean.Student;
-import Chapter02.bean.ThreadScope;
+import Chapter02.bean.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.core.io.ClassPathResource;
 
+import java.time.LocalDate;
 import java.util.Set;
 import java.util.concurrent.ForkJoinPool;
 import java.util.function.Function;
@@ -104,6 +102,21 @@ public class Chapter02 {
 		BarInterfaceImpl barByInstance = beanFactory.getBean("barByInstance", BarInterfaceImpl.class);
 		Foo fooByInstance = beanFactory.getBean("fooByInstance", Foo.class);
 		assertEquals(barByInstance, fooByInstance.getBarInstance());
+
+	}
+
+	@Test
+	public void factoryBean() {
+
+		NextDayDateProvider provider = beanFactory.getBean("nextDayDateProvider", NextDayDateProvider.class);
+
+		Object factoryBean = beanFactory.getBean("nextDayDate");
+		assertTrue(factoryBean instanceof LocalDate);
+
+		Object bean = beanFactory.getBean("&nextDayDate");
+		assertTrue(bean instanceof NextDayDateFactoryBean);
+
+		assertEquals(LocalDate.now().plusDays(1), provider.getDateOfNextDay());
 
 	}
 
