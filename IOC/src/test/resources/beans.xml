@@ -72,4 +72,53 @@ http://www.springframework.org/schema/beans/spring-beans.xsd">
 		<property name="dateOfNextDay" ref="nextDayDate"/>
 	</bean>
 	<bean id="nextDayDate" class="Chapter02.bean.NextDayDateFactoryBean"/>
+
+
+	<!--	scope的使用“陷阱
+	 studentPersister不是单例，但是student是单例，会导致所有studentPersister实例的student都是同一个
+	 -->
+	<bean id="singletonStudent" class="Chapter02.bean.Student" scope="singleton"/>
+	<bean id="studentPersister" class="Chapter02.bean.StudentPersister" scope="prototype">
+		<property name="student" ref="singletonStudent"/>
+	</bean>
+
+	<!--	方法注入
+	<public|protected> [abstract] <return-type> theMethodName(no-arguments);
+	方法必须能够被子类实现或者覆写，因为容器会为我们要进行方法注入的对象使用Cglib动态生成一个子类实现，从而替代当前对象
+	-->
+	<bean id="prototypeStudent" class="Chapter02.bean.Student" scope="prototype"/>
+	<bean id="lookUpStudentPersister" class="Chapter02.bean.StudentPersister" scope="prototype">
+		<lookup-method name="getStudent" bean="prototypeStudent"/>
+	</bean>
+
+	<!--	方法替换
+	与方法注入只是通过相应方法为主体对象注入依赖对象不同，方法替换更多体现在方法的实现层
+	面上，它可以灵活替换或者说以新的方法实现覆盖掉原来某个方法的实现逻辑。基本上可以认为，方
+	法替换可以帮助我们实现简单的方法拦截功能-->
+	<bean id="beReplaced" class="Chapter02.bean.StudentPersister">
+		<replaced-method name="getTime" replacer="methodReplacerImpl"/>
+	</bean>
+	<bean id="methodReplacerImpl" class="Chapter02.bean.MethodReplacerImpl"/>
+
+
+	<!-- 实现BeanFactoryAware接口	-->
+	<bean id="awareStudent" class="Chapter02.bean.Student" scope="prototype"/>
+	<bean id="awareStudentPersister" class="Chapter02.bean.StudentPersister"/>
+
+
+	<!--	使用ObjectFactoryCreatingFactoryBean
+		Spring 提供的一个FactoryBean实现，它返回一个ObjectFactory实例
+		从这个ObjectFactory实例可以为我们返回容器管理的相关对象。
+		实际上，ObjectFactoryCreatingFactoryBean 实现了BeanFactoryAware接口
+		它返回的ObjectFactory实例只是特定于与Spring容器进行交互的一个实现而已。
+		使用它的好处就是，隔离了客户端对象对BeanFactory的直接引用。-->
+	<bean id="objectFactoryStudent" class="Chapter02.bean.Student" scope="prototype"/>
+	<bean id="objectFactoryStudentPersister" class="Chapter02.bean.StudentPersister">
+		<property name="objectFactory" ref="objectBeanFactory"/>
+	</bean>
+	<bean id="objectBeanFactory" class="org.springframework.beans.factory.config.ObjectFactoryCreatingFactoryBean">
+		<property name="targetBeanName" value="objectFactoryStudent"/>
+	</bean>
+
+
 </beans>

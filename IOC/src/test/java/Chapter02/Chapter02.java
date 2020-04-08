@@ -120,4 +120,66 @@ public class Chapter02 {
 
 	}
 
+	/**
+	 * “每次调用都让容器返回新的对象实例”
+	 */
+	@Test
+	public void StudentPersister() {
+
+		StudentPersister persister1 = beanFactory.getBean("studentPersister", StudentPersister.class);
+		StudentPersister persister2 = beanFactory.getBean("studentPersister", StudentPersister.class);
+		assertEquals(persister1.getStudent().hashCode(), persister2.getStudent().hashCode());
+
+	}
+
+	/**
+	 * 方法注入 Method Injection
+	 */
+	@Test
+	public void MethodInjection() {
+
+		StudentPersister lookUpStudentPersister1 = beanFactory.getBean("lookUpStudentPersister", StudentPersister.class);
+		StudentPersister lookUpStudentPersister2 = beanFactory.getBean("lookUpStudentPersister", StudentPersister.class);
+
+		assertNotEquals(lookUpStudentPersister1.getStudent().hashCode(), lookUpStudentPersister2.getStudent().hashCode());
+
+	}
+
+	/**
+	 * 方法替换  Method Replacement
+	 */
+	@Test
+	public void MethodReplacement() {
+
+		StudentPersister beReplaced = beanFactory.getBean("beReplaced", StudentPersister.class);
+
+		System.out.println(beReplaced.getTime());
+
+	}
+
+	/**
+	 * 实现BeanFactoryAware接口
+	 */
+	@Test
+	public void implementsBeanFactoryAware() {
+		StudentPersister awareStudentPersister1 = beanFactory.getBean("awareStudentPersister", StudentPersister.class);
+		StudentPersister awareStudentPersister2 = beanFactory.getBean("awareStudentPersister", StudentPersister.class);
+
+		assertNotEquals(awareStudentPersister1.getStudentFromInnerFactory().hashCode(), awareStudentPersister2.getStudentFromInnerFactory().hashCode());
+
+	}
+
+	/**
+	 * 使用ObjectFactoryCreatingFactoryBean
+	 * 也可以使用ServiceLocatorFactoryBean，可以让我们自定义工厂接口，而不用非要使用ObjectFactory
+	 */
+	@Test
+	public void factoryBeanInSpring() {
+		StudentPersister objectFactoryStudentPersister1 = beanFactory.getBean("objectFactoryStudentPersister", StudentPersister.class);
+		StudentPersister objectFactoryStudentPersister2 = beanFactory.getBean("objectFactoryStudentPersister", StudentPersister.class);
+
+		assertNotEquals(objectFactoryStudentPersister1.getStudentFromObjectFactory().hashCode(), objectFactoryStudentPersister2.getStudentFromObjectFactory().hashCode());
+
+
+	}
 }
