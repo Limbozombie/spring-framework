@@ -3,8 +3,11 @@ package Chapter02;
 import Chapter02.bean.*;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.config.PropertyOverrideConfigurer;
+import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.io.ClassPathResource;
 
 import java.time.LocalDate;
@@ -24,12 +27,23 @@ public class Chapter02 {
 
 	private final DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
 
+	private final ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("beans.xml");
+
 
 	@Before
 	public void setup() {
 		beanFactory.registerScope("thread", new ThreadScope());
 		XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(beanFactory);
 		reader.loadBeanDefinitions(new ClassPathResource("beans.xml"));
+
+		PropertyPlaceholderConfigurer placeholder = new PropertyPlaceholderConfigurer();
+		placeholder.setLocation(new ClassPathResource("jdbc.properties"));
+		placeholder.postProcessBeanFactory(beanFactory);
+
+		PropertyOverrideConfigurer override = new PropertyOverrideConfigurer();
+		override.setLocation(new ClassPathResource("overrideJdbc.properties"));
+		override.postProcessBeanFactory(beanFactory);
+
 	}
 
 
@@ -180,6 +194,42 @@ public class Chapter02 {
 
 		assertNotEquals(objectFactoryStudentPersister1.getStudentFromObjectFactory().hashCode(), objectFactoryStudentPersister2.getStudentFromObjectFactory().hashCode());
 
+
+	}
+
+	/**
+	 * 使用PropertyPlaceholderConfigurer 替换XML配置中占位符
+	 * 拆分业务配置与系统配置信息
+	 */
+	@Test
+	public void propertyPlaceholderConfigurer() {
+		DataSource dataSourceFromApplicationContext = applicationContext.getBean("dataSource", DataSource.class);
+		DataSource dataSourceFromBeanFactory = beanFactory.getBean("dataSource", DataSource.class);
+
+		assertEquals(dataSourceFromApplicationContext.getUrl(), dataSourceFromBeanFactory.getUrl());
+		assertEquals(dataSourceFromApplicationContext.getDriverClassName(), dataSourceFromBeanFactory.getDriverClassName());
+		assertEquals(dataSourceFromApplicationContext.getUsername(), dataSourceFromBeanFactory.getUsername());
+		assertEquals(dataSourceFromApplicationContext.getPassword(), dataSourceFromBeanFactory.getPassword());
+
+	}
+
+
+	/**
+	 * 使用PropertyOverrideConfigurer 覆盖XML中的配置
+	 * 如果有多个，最后一个生效
+	 * 文件中的配置的规则 beanName.propertyName=value
+	 */
+	@Test
+	public void propertyOverrideConfigurer() {
+
+		DataSource dataSourceFromApplicationContext = applicationContext.getBean("dataSource", DataSource.class);
+		DataSource dataSourceFromBeanFactory = beanFactory.getBean("dataSource", DataSource.class);
+
+		assertEquals("overrideUsername", dataSourceFromApplicationContext.getUsername());
+		assertEquals("overridePassword", dataSourceFromApplicationContext.getPassword());
+
+		assertEquals("overrideUsername", dataSourceFromBeanFactory.getUsername());
+		assertEquals("overridePassword", dataSourceFromBeanFactory.getPassword());
 
 	}
 }

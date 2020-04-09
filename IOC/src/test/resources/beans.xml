@@ -120,5 +120,21 @@ http://www.springframework.org/schema/beans/spring-beans.xsd">
 		<property name="targetBeanName" value="objectFactoryStudent"/>
 	</bean>
 
+	<bean id="dataSource" class="Chapter02.bean.DataSource">
+		<property name="url" value="${jdbc.url}"/>
+		<property name="driverClassName" value="${jdbc.driver}"/>
+		<property name="username" value="${jdbc.username}"/>
+		<property name="password" value="${jdbc.password}"/>
+	</bean>
+	<bean id="placeholder" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>jdbc.properties</value>
+			</list>
+		</property>
+	</bean>
 
+	<bean id="override" class="org.springframework.beans.factory.config.PropertyOverrideConfigurer">
+		<property name="location" value="overrideJdbc.properties"/>
+	</bean>
 </beans>
