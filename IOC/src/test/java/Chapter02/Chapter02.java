@@ -3,6 +3,8 @@ package Chapter02;
 import Chapter02.bean.*;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.PropertyEditorRegistrar;
+import org.springframework.beans.factory.config.CustomEditorConfigurer;
 import org.springframework.beans.factory.config.PropertyOverrideConfigurer;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
@@ -44,6 +46,11 @@ public class Chapter02 {
 		override.setLocation(new ClassPathResource("overrideJdbc.properties"));
 		override.postProcessBeanFactory(beanFactory);
 
+		CustomEditorConfigurer customEditorConfigurer = new CustomEditorConfigurer();
+		customEditorConfigurer.setPropertyEditorRegistrars(new PropertyEditorRegistrar[]{
+				registry -> registry.registerCustomEditor(LocalDate.class, new DatePropertyEditor("yyyy/MM/dd"))
+		});
+		customEditorConfigurer.postProcessBeanFactory(beanFactory);
 	}
 
 
@@ -232,4 +239,12 @@ public class Chapter02 {
 		assertEquals("overridePassword", dataSourceFromBeanFactory.getPassword());
 
 	}
+
+	@Test
+	public void customEditorConfigurer() {
+		LocalDateWrapper localDateWrapperFromApplicationContext = applicationContext.getBean("localDateWrapper", LocalDateWrapper.class);
+		LocalDateWrapper localDateWrapperFromBeanFactory = beanFactory.getBean("localDateWrapper", LocalDateWrapper.class);
+		assertEquals(localDateWrapperFromApplicationContext.getDate(), localDateWrapperFromBeanFactory.getDate());
+	}
+
 }

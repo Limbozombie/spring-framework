@@ -137,4 +137,23 @@ http://www.springframework.org/schema/beans/spring-beans.xsd">
 	<bean id="override" class="org.springframework.beans.factory.config.PropertyOverrideConfigurer">
 		<property name="location" value="overrideJdbc.properties"/>
 	</bean>
+
+
+	<bean id="localDateWrapper" class="Chapter02.bean.LocalDateWrapper">
+		<property name="date" value="2020/04/01"/>
+	</bean>
+	<bean id="customEditorConfigurer" class="org.springframework.beans.factory.config.CustomEditorConfigurer">
+		<property name="propertyEditorRegistrars">
+			<list>
+				<ref bean="datePropertyEditorRegistrar"/>
+			</list>
+		</property>
+	</bean>
+	<bean id="datePropertyEditorRegistrar" class="Chapter02.bean.DatePropertyEditorRegistrar">
+		<property name="editor" ref="editor"/>
+	</bean>
+	<bean id="editor" class="Chapter02.bean.DatePropertyEditor">
+		<property name="datePattern" value="yyyy/MM/dd"/>
+	</bean>
+
 </beans>
