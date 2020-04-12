@@ -1,6 +1,8 @@
 package Chapter02;
 
 import Chapter02.bean.*;
+import Chapter02.event.MethodExecutionEventPublisher;
+import Chapter02.event.SimpleMethodExecutionEventListener;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.BeanUtils;
@@ -285,6 +287,13 @@ public class Chapter02 {
 
 		//applicationContext 默认实例化所有bean
 		applicationContext.registerShutdownHook();
+	}
+
+	@Test
+	public void event() {
+		MethodExecutionEventPublisher eventPublisher = new MethodExecutionEventPublisher();
+		eventPublisher.addMethodExecutionEventListener(new SimpleMethodExecutionEventListener());
+		eventPublisher.methodToMonitor();
 	}
 
 }
