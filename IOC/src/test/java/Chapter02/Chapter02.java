@@ -3,7 +3,10 @@ package Chapter02;
 import Chapter02.bean.*;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.beans.*;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.beans.PropertyEditorRegistrar;
 import org.springframework.beans.factory.config.CustomEditorConfigurer;
 import org.springframework.beans.factory.config.PropertyOverrideConfigurer;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
@@ -51,6 +54,8 @@ public class Chapter02 {
 				registry -> registry.registerCustomEditor(LocalDate.class, new DatePropertyEditor("yyyy/MM/dd"))
 		});
 		customEditorConfigurer.postProcessBeanFactory(beanFactory);
+
+		beanFactory.addBeanPostProcessor(new TranslatePostProcessor());
 	}
 
 
@@ -258,6 +263,13 @@ public class Chapter02 {
 		beanWrapper.setPropertyValue("name", "名字");
 		assertSame(student, beanWrapper.getWrappedInstance());
 		assertEquals("名字", beanWrapper.getPropertyValue("name"));
+	}
+
+	@Test
+	public void translatableStudent() {
+		Student studentFromApplicationContext = applicationContext.getBean("translatableStudent", Student.class);
+		Student studentFromBeanFactory = beanFactory.getBean("translatableStudent", Student.class);
+		assertEquals(studentFromApplicationContext.getTarget(), studentFromBeanFactory.getTarget());
 	}
 
 }

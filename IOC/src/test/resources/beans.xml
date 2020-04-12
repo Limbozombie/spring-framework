@@ -156,4 +156,8 @@ http://www.springframework.org/schema/beans/spring-beans.xsd">
 		<property name="datePattern" value="yyyy/MM/dd"/>
 	</bean>
 
+	<bean id="translatePostProcessor" class="Chapter02.bean.TranslatePostProcessor"/>
+	<bean id="translatableStudent" class="Chapter02.bean.Student">
+		<property name="source" value="待翻译的句子"/>
+	</bean>
 </beans>
