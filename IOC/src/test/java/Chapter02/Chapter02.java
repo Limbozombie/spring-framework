@@ -3,7 +3,7 @@ package Chapter02;
 import Chapter02.bean.*;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.beans.PropertyEditorRegistrar;
+import org.springframework.beans.*;
 import org.springframework.beans.factory.config.CustomEditorConfigurer;
 import org.springframework.beans.factory.config.PropertyOverrideConfigurer;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
@@ -245,6 +245,19 @@ public class Chapter02 {
 		LocalDateWrapper localDateWrapperFromApplicationContext = applicationContext.getBean("localDateWrapper", LocalDateWrapper.class);
 		LocalDateWrapper localDateWrapperFromBeanFactory = beanFactory.getBean("localDateWrapper", LocalDateWrapper.class);
 		assertEquals(localDateWrapperFromApplicationContext.getDate(), localDateWrapperFromBeanFactory.getDate());
+	}
+
+	/**
+	 * 使用BeanWrapper对bean实例操作很方便
+	 * 可以免去直接使用Java反射API（Java Reflection API）操作对象实例的烦琐
+	 */
+	@Test
+	public void beanWrapper() {
+		Object student = BeanUtils.instantiateClass(Student.class);
+		BeanWrapper beanWrapper = new BeanWrapperImpl(student);
+		beanWrapper.setPropertyValue("name", "名字");
+		assertSame(student, beanWrapper.getWrappedInstance());
+		assertEquals("名字", beanWrapper.getPropertyValue("name"));
 	}
 
 }
