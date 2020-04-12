@@ -162,4 +162,6 @@ http://www.springframework.org/schema/beans/spring-beans.xsd">
 	</bean>
 
 	<bean id="initStudent" class="Chapter02.bean.Student"/>
+
+	<bean id="disposableStudent" class="Chapter02.bean.Student"/>
 </beans>

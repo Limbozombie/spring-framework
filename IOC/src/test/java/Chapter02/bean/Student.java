@@ -1,5 +1,6 @@
 package Chapter02.bean;
 
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 
 import java.util.Objects;
@@ -8,7 +9,7 @@ import java.util.Objects;
  * @author 271636872@qq.com
  * @since 2020/4/5 17:31
  */
-public class Student implements Translatable, InitializingBean {
+public class Student implements Translatable, InitializingBean, DisposableBean {
 
 	private String name;
 	private Byte age;
@@ -81,5 +82,10 @@ public class Student implements Translatable, InitializingBean {
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		System.out.println("init");
+	}
+
+	@Override
+	public void destroy() throws Exception {
+		System.out.println("destroy");
 	}
 }

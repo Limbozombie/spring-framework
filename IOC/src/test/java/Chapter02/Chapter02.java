@@ -277,4 +277,14 @@ public class Chapter02 {
 		Student studentFromBeanFactory = beanFactory.getBean("initStudent", Student.class);
 	}
 
+	@Test
+	public void destroySingletons() {
+		//beanFactory 默认懒加载
+		beanFactory.getBean("disposableStudent", Student.class);
+		beanFactory.destroySingletons();
+
+		//applicationContext 默认实例化所有bean
+		applicationContext.registerShutdownHook();
+	}
+
 }
