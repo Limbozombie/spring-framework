@@ -1,12 +1,14 @@
 package Chapter02.bean;
 
+import org.springframework.beans.factory.InitializingBean;
+
 import java.util.Objects;
 
 /**
  * @author 271636872@qq.com
  * @since 2020/4/5 17:31
  */
-public class Student implements Translatable {
+public class Student implements Translatable, InitializingBean {
 
 	private String name;
 	private Byte age;
@@ -74,5 +76,10 @@ public class Student implements Translatable {
 
 	public void setSource(String source) {
 		this.source = source;
+	}
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		System.out.println("init");
 	}
 }

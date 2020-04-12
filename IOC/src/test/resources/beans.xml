@@ -160,4 +160,6 @@ http://www.springframework.org/schema/beans/spring-beans.xsd">
 	<bean id="translatableStudent" class="Chapter02.bean.Student">
 		<property name="source" value="待翻译的句子"/>
 	</bean>
+
+	<bean id="initStudent" class="Chapter02.bean.Student"/>
 </beans>

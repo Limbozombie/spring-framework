@@ -272,4 +272,9 @@ public class Chapter02 {
 		assertEquals(studentFromApplicationContext.getTarget(), studentFromBeanFactory.getTarget());
 	}
 
+	@Test
+	public void init() {
+		Student studentFromBeanFactory = beanFactory.getBean("initStudent", Student.class);
+	}
+
 }
