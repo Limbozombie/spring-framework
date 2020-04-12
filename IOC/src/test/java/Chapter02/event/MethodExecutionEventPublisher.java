@@ -1,5 +1,8 @@
 package Chapter02.event;
 
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,7 +10,7 @@ import java.util.List;
  * @author 271636872@qq.com
  * @since 2020/4/12 19:12
  */
-public class MethodExecutionEventPublisher {
+public class MethodExecutionEventPublisher implements ApplicationEventPublisherAware {
 
 	private final List<MethodExecutionEventListener> listeners = new ArrayList<>();
 
@@ -17,6 +20,13 @@ public class MethodExecutionEventPublisher {
 		publishEvent(MethodExecutionStatus.BEGIN, event2Publish);
 		// 执行实际的方法逻辑
 		publishEvent(MethodExecutionStatus.END, event2Publish);
+		MethodExecutionEvent beginEvt = new
+				MethodExecutionEvent(this, "methodToMonitor", MethodExecutionStatus.BEGIN);
+		this.eventPublisher.publishEvent(beginEvt);
+// 执行实际方法逻辑
+		MethodExecutionEvent endEvt = new
+				MethodExecutionEvent(this, "methodToMonitor", MethodExecutionStatus.END);
+		this.eventPublisher.publishEvent(endEvt);
 	}
 
 	protected void publishEvent(MethodExecutionStatus status,
@@ -53,5 +63,10 @@ public class MethodExecutionEventPublisher {
 		this.listeners.clear();
 	}
 
+	private ApplicationEventPublisher eventPublisher;
 
+	@Override
+	public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+		eventPublisher = applicationEventPublisher;
+	}
 }

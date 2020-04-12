@@ -164,4 +164,7 @@ http://www.springframework.org/schema/beans/spring-beans.xsd">
 	<bean id="initStudent" class="Chapter02.bean.Student"/>
 
 	<bean id="disposableStudent" class="Chapter02.bean.Student"/>
+
+	<bean id="evtListener" class="Chapter02.event.SimpleMethodExecutionEventListener"/>
+	<bean id="evtPublisher" class="Chapter02.event.MethodExecutionEventPublisher"/>
 </beans>

@@ -4,6 +4,7 @@ import Chapter02.bean.*;
 import Chapter02.event.MethodExecutionEventPublisher;
 import Chapter02.event.SimpleMethodExecutionEventListener;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
@@ -289,11 +290,20 @@ public class Chapter02 {
 		applicationContext.registerShutdownHook();
 	}
 
+	@Ignore
 	@Test
 	public void event() {
 		MethodExecutionEventPublisher eventPublisher = new MethodExecutionEventPublisher();
 		eventPublisher.addMethodExecutionEventListener(new SimpleMethodExecutionEventListener());
 		eventPublisher.methodToMonitor();
+	}
+
+	@Test
+	public void springEvent() {
+		MethodExecutionEventPublisher publisher = applicationContext.getBean("evtPublisher", MethodExecutionEventPublisher.class);
+		SimpleMethodExecutionEventListener evtListener = applicationContext.getBean("evtListener", SimpleMethodExecutionEventListener.class);
+		publisher.addMethodExecutionEventListener(evtListener);
+		publisher.methodToMonitor();
 	}
 
 }
